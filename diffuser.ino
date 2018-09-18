@@ -2,6 +2,9 @@
 #include <WiFiUdp.h>
 
 // Set up some constants
+const int LED_PIN = 8;
+const int DIFFUSER_PIN = 7;
+
 const int DIFFUSER_OFF = 0;
 const int DIFFUSER_PULSING = 1;
 const int DIFFUSER_CONSTANT = 2;
@@ -25,8 +28,6 @@ const int LED_WHITE = 15;
 const int LED_WHITE_BRIGHT = 16;
 
 // Set up variables for use later
-int ledPin = 13;
-int diffuserPin = 12;
 int ledState = LED_OFF;
 int diffuserState = DIFFUSER_OFF;
 char ssid[] = "";
@@ -37,8 +38,8 @@ char packetBuffer[255];
 WiFiUDP Udp;
 
 void setup() {
-  pinMode(ledPin, OUTPUT);
-  pinMode(diffuserPin, OUTPUT);
+  pinMode(LED_PIN, OUTPUT);
+  pinMode(DIFFUSER_PIN, OUTPUT);
 
   Serial.begin(9600);
   while (!Serial) {
@@ -83,17 +84,43 @@ void loop() {
       // NUL-terminate the buffer
       packetBuffer[len] = 0;
       if (strcmp(packetBuffer, "DIFFUSE_PULSE") == 0) {
-        pulseSignal(DIFFUSER_PULSING, diffuserPin);
+        pulseSignal(DIFFUSER_PULSING, DIFFUSER_PIN);
       } else if (strcmp(packetBuffer, "DIFFUSE_CONSTANT") == 0) {
-        pulseSignal(DIFFUSER_CONSTANT, diffuserPin);
+        pulseSignal(DIFFUSER_CONSTANT, DIFFUSER_PIN);
       } else if (strcmp(packetBuffer, "DIFFUSE_OFF") == 0) {
-        pulseSignal(DIFFUSER_OFF, diffuserPin);
+        pulseSignal(DIFFUSER_OFF, DIFFUSER_PIN);
       } else if (strcmp(packetBuffer, "LED_RAINBOW") == 0) {
-        pulseSignal(LED_RAINBOW, ledPin);
+        pulseSignal(LED_RAINBOW, LED_PIN);
+      } else if (strcmp(packetBuffer, "LED_GREEN") == 0) {
+        pulseSignal(LED_GREEN, LED_PIN);
+      } else if (strcmp(packetBuffer, "LED_GREEN_BRIGHT") == 0) {
+        pulseSignal(LED_GREEN_BRIGHT, LED_PIN);
+      } else if (strcmp(packetBuffer, "LED_BLUE") == 0) {
+        pulseSignal(LED_BLUE, LED_PIN);
+      } else if (strcmp(packetBuffer, "LED_BLUE_BRIGHT") == 0) {
+        pulseSignal(LED_BLUE_BRIGHT, LED_PIN);
+      } else if (strcmp(packetBuffer, "LED_RED") == 0) {
+        pulseSignal(LED_RED, LED_PIN);
+      } else if (strcmp(packetBuffer, "LED_RED_BRIGHT") == 0) {
+        pulseSignal(LED_RED_BRIGHT, LED_PIN);
+      } else if (strcmp(packetBuffer, "LED_YELLOW") == 0) {
+        pulseSignal(LED_YELLOW, LED_PIN);
+      } else if (strcmp(packetBuffer, "LED_YELLOW_BRIGHT") == 0) {
+        pulseSignal(LED_YELLOW_BRIGHT, LED_PIN);
       } else if (strcmp(packetBuffer, "LED_PURPLE") == 0) {
-        pulseSignal(LED_PURPLE, ledPin);
+        pulseSignal(LED_PURPLE, LED_PIN);
+      } else if (strcmp(packetBuffer, "LED_PURPLE_BRIGHT") == 0) {
+        pulseSignal(LED_PURPLE_BRIGHT, LED_PIN);
+      } else if (strcmp(packetBuffer, "LED_TEAL") == 0) {
+        pulseSignal(LED_TEAL, LED_PIN);
+      } else if (strcmp(packetBuffer, "LED_TEAL_BRIGHT") == 0) {
+        pulseSignal(LED_TEAL_BRIGHT, LED_PIN);
+      } else if (strcmp(packetBuffer, "LED_WHITE") == 0) {
+        pulseSignal(LED_WHITE, LED_PIN);
+      } else if (strcmp(packetBuffer, "LED_WHITE_BRIGHT") == 0) {
+        pulseSignal(LED_WHITE_BRIGHT, LED_PIN);
       } else if (strcmp(packetBuffer, "LED_OFF") == 0) {
-        pulseSignal(LED_OFF, ledPin);
+        pulseSignal(LED_OFF, LED_PIN);
       }
     }
   }
@@ -103,10 +130,10 @@ void pulseSignal(int targetState, int channel) {
   int maximum;
   int* state;
   int pulseCount;
-  if (channel == ledPin) {
+  if (channel == LED_PIN) {
     maximum = 17;
     state = &ledState;
-  } else if (channel == diffuserPin) {
+  } else if (channel == DIFFUSER_PIN) {
     maximum = 3;
     state = &diffuserState;
   }
@@ -118,9 +145,9 @@ void pulseSignal(int targetState, int channel) {
   int i;
   for (i = 0; i < pulseCount; i++) {
     digitalWrite(channel, HIGH);
-    delay(100);
+    delay(75);
     digitalWrite(channel, LOW);
-    delay(100);
+    delay(75);
   }
   *state = targetState;
 }
